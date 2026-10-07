@@ -1,0 +1,179 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://world_portal.gd" id="1_portal"]
+[ext_resource type="Script" path="res://player.gd" id="2_player"]
+
+[sub_resource type="Environment" id="env"]
+background_mode = 1
+background_color = Color(0.05, 0.055, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.55, 0.6, 1)
+ambient_light_energy = 0.35
+
+[sub_resource type="StandardMaterial3D" id="wall_office"]
+albedo_color = Color(0.8, 0.8, 0.76, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="wall_hall"]
+albedo_color = Color(0.84, 0.82, 0.72, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="carpet_office"]
+albedo_color = Color(0.28, 0.33, 0.45, 1)
+
+[sub_resource type="StandardMaterial3D" id="carpet_hall"]
+albedo_color = Color(0.55, 0.42, 0.26, 1)
+
+[sub_resource type="StandardMaterial3D" id="furniture"]
+albedo_color = Color(0.75, 0.74, 0.7, 1)
+
+[sub_resource type="StandardMaterial3D" id="screen"]
+albedo_color = Color(0.1, 0.25, 0.12, 1)
+emission_enabled = true
+emission = Color(0.1, 0.3, 0.12, 1)
+
+[sub_resource type="CapsuleShape3D" id="player_shape"]
+radius = 0.3
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="lamp"]
+albedo_color = Color(1, 0.97, 0.9, 1)
+emission_enabled = true
+emission = Color(1, 0.97, 0.9, 1)
+emission_energy_multiplier = 2.5
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Office" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Shell" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+size = Vector3(4.4, 3.4, 4.4)
+material = SubResource("wall_office")
+
+[node name="Inside" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+operation = 2
+size = Vector3(4, 3, 4)
+material = SubResource("wall_office")
+
+[node name="DoorGap" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, -2.1)
+operation = 2
+size = Vector3(1, 2.1, 0.6)
+
+[node name="Carpet" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+size = Vector3(4, 0.02, 4)
+material = SubResource("carpet_office")
+
+[node name="Desk" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.45, 0.4, 0.6)
+size = Vector3(1, 0.8, 1.6)
+material = SubResource("furniture")
+
+[node name="Monitor" type="CSGBox3D" parent="Office"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55, 0.98, 0.6)
+size = Vector3(0.35, 0.35, 0.45)
+material = SubResource("screen")
+
+[node name="OfficeLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+light_energy = 1.4
+shadow_enabled = true
+omni_range = 6.0
+
+[node name="Hallway" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, -30, -11)
+use_collision = true
+
+[node name="Shell" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+size = Vector3(2.8, 3.4, 14.4)
+material = SubResource("wall_hall")
+
+[node name="Inside" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+operation = 2
+size = Vector3(2.4, 3, 14)
+material = SubResource("wall_hall")
+
+[node name="DoorGap" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 7.1)
+operation = 2
+size = Vector3(1, 2.1, 0.6)
+
+[node name="Carpet" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+size = Vector3(2.4, 0.02, 14)
+material = SubResource("carpet_hall")
+
+[node name="FarDoor" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, -6.98)
+size = Vector3(1, 2.1, 0.04)
+material = SubResource("furniture")
+
+[node name="SideDoor1" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18, 1.05, 3)
+size = Vector3(0.04, 2.1, 0.95)
+material = SubResource("furniture")
+
+[node name="SideDoor2" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18, 1.05, -1)
+size = Vector3(0.04, 2.1, 0.95)
+material = SubResource("furniture")
+
+[node name="SideDoor3" type="CSGBox3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18, 1.05, -4)
+size = Vector3(0.04, 2.1, 0.95)
+material = SubResource("furniture")
+
+[node name="Sign427" type="Label3D" parent="Hallway"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.85, 2.25, 6.98)
+modulate = Color(0.22, 0.22, 0.22, 1)
+text = "427"
+font_size = 72
+
+[node name="HallLight1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, -27.4, -6)
+light_energy = 1.4
+shadow_enabled = true
+omni_range = 7.0
+
+[node name="HallLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, -27.4, -11)
+light_energy = 1.4
+shadow_enabled = true
+omni_range = 7.0
+
+[node name="HallLight3" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, -27.4, -16)
+light_energy = 1.4
+shadow_enabled = true
+omni_range = 7.0
+
+[node name="PortalA" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+script = ExtResource("1_portal")
+partner = NodePath("../PortalB")
+
+[node name="PortalB" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 100, -30, -4)
+script = ExtResource("1_portal")
+partner = NodePath("../PortalA")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+script = ExtResource("2_player")
+
+[node name="Collision" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("player_shape")
+
+[node name="Head" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+fov = 70.0
